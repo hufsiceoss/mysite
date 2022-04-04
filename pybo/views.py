@@ -1,15 +1,16 @@
+import PIL
 from django.shortcuts import render
 from .models import Image
 from django.http import HttpResponse
 
 from account.models import Account
+from PIL import Image
 
 # 참고
 # https://gosmcom.tistory.com/143 : 로그인 처리 이름 불러오기
 # https://free-eunb.tistory.com/43 : 이미지 for 문처리
 
 def index(request):
-    #return HttpResponse("안녕하세요 pybo에 오신것을 환영합니다.!")
     userstate = request.session.get('user')
     name = {}
 
@@ -28,16 +29,23 @@ def use(request):
     account = Account.objects.get(pk=userstate)
     name = account.username
 
-    if 'imgUpload' in request.method == "POST":
+    if request.method == "POST" and 'btnimg' in request.POST:
         img = request.FILES.get('image', None)
+        '''re_img = PIL.open(img)
+        
+        src_width, src_height = re_img
+        src_ratio = float(src_height) / float(src_width)
+        dst_height = round(scr_ratio * width) '''
 
         if not img:
             #에러메시지 출력해줬음 좋겠음 이미지를 선택해주세요~~뭐 이런거 일단은 새로고침 형태로 이동
-            return render(request, 'use.html', {'name':name})
+            imgList = Image.objects.filter(email=account.useremail)
+
+            return render(request, 'use.html', {'name': name, 'imgList': imgList})
+            #return render(request, 'use.html', {'name':name})
 
         else:
             image = Image(
-                #idx = request.session.get('user'),
                 email=account.useremail,
                 image = img,
             )
@@ -57,15 +65,21 @@ def use(request):
 
 
 def image(request, id):
-    userstate = request.session.get('user')
-    account = Account.objects.get(pk=userstate)
-    name = account.username
+    #이미지 추출하기 버튼을 눌렀을 때
+    if request.method=="POST" and 'btnrun' in request.POST:
+        img_info = Image.objects.get(pk=id)
+        img_rcs = img_info.image
+        #여기서 새롭게 함수를 이동해야 하나?
+        return HttpResponse("추출중입니다")
 
-    imgList = Image.objects.filter(email=account.useremail)
+    else:
+        userstate = request.session.get('user')
+        account = Account.objects.get(pk=userstate)
+        name = account.username
 
-    img_info = Image.objects.get(pk=id)
+        imgList = Image.objects.filter(email=account.useremail)
 
-    img_rcs = img_info.image
+        img_info = Image.objects.get(pk=id)
+        img_rcs = img_info.image
 
-
-    return render(request, 'use.html', {'name':name, 'imgList':imgList, 'img_rcs':img_rcs})
+        return render(request, 'use.html', {'name':name, 'imgList':imgList, 'img_rcs':img_rcs})

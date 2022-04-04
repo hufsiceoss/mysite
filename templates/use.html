@@ -61,35 +61,16 @@ https://sinna94.tistory.com/entry/JavaScript-%EC%9D%B4%EB%AF%B8%EC%A7%80-%EC%97%
 
 <aside id="leftsidebar" class="mb-3">
     <table class="table">
-        <!-- <thead>
-        <tr>
-            <th scope="col">파일명</th>
-        </tr>
-        </thead>
-        <tbody>
-        <tr>
-            <th scope="row">1</th>
-            <td></td>
-        </tr>
-        <tr>
-            <th scope="row">2</th>
-            <td></td>
-        </tr>
-        <tr>
-            <th scope="row">3</th>
-        </tr>
-        </tbody> -->
 
+            <body>
 
-            {% for file in imgList %}
-                <!-- <h5> {{ file.image }} </h5> -->
-                <!--<a href="{{ file.image.url }}" >{{ file.image }}</a>-->
-                <a href="{% url 'image' file.id %}" >{{ file.image }}</a>
-                <h5> ------------------------------</h5>
-                <!--이름을 눌렀을 때 이동없이 같은 화면에서 띄우고 싶음 누르면 url은 이동만하고..이미지 url을 넘겨줘야하는디 그걸 뭐로? -->
-                <!-- <img src="{{ file.image.url }}"> -->
-                <br>
-            {% endfor %}
+                {% for file in imgList %}
+                    <a href="{% url 'image' file.id %}" style="color:red" >{{ file.image }}</a>
+                    <br>
+
+                {% endfor %}
+
+            </body>
 
     </table>
 
@@ -104,7 +85,7 @@ https://sinna94.tistory.com/entry/JavaScript-%EC%9D%B4%EB%AF%B8%EC%A7%80-%EC%97%
 
     <body>
 
-    <form method = "POST" action = ".",id="업로드" name="imgUpload" enctype="multipart/form-data">
+    <form method = "POST" enctype="multipart/form-data">
         {% csrf_token %}
         <div id='image_preview'>
             <input type='file' id='btnAtt' name="image" multiple='multiple' />
@@ -113,7 +94,8 @@ https://sinna94.tistory.com/entry/JavaScript-%EC%9D%B4%EB%AF%B8%EC%A7%80-%EC%97%
         </div>
         </div>
 
-        <button type="submit" class="btn btn-primary">업로드</button>
+        <button type="submit" name="btnimg" class="btn btn-primary">업로드</button>
+        <button type="sumbig" name="btnrun" class="btn btn-primary">추출하기</button>
     </form>
 
 
